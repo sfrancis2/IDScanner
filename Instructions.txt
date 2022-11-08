@@ -1,0 +1,5 @@
+Using New Photocopy Program that Alters Image Sizes
+Step 1: Change Photopath on Line #7 to the path of the foler containing images to be sorted
+Step 2: Change Output Folder on line 95 to the folder where updated Images are to be stored
+Step 3: Run Program and select CSV file containing student informmation
+Step 4: Select folder for which the file containing student ID's of those missing a picture and the mapping is to be stored (can be the same and the photo file)
