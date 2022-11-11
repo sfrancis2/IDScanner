@@ -4,7 +4,7 @@ Add-Type -AssemblyName PresentationFramework
 Clear-Host
 
 #Change photopath to folder holding pictures
-$PhotoPath = "C:\Users\sfrancis3\Desktop\OneDrive_1_10-28-2022\1L photos Fall 2022"
+$PhotoPath = "P:/"
 $testlist = New-Object -TypeName 'System.Collections.ArrayList';
 
 Function ResizeImage() {
@@ -92,7 +92,7 @@ Function ResizeImage() {
 		    $Image = $PhotoPath+"\"+$id+".jpg"
 
             #Change to Path of where updated photographs are to be stored
-		    $OutputFolder = "C:\Users\sfrancis3\Documents\UpdatedIDPhotos\"
+		    $OutputFolder = "C:\Users\sfrancis3\Desktop\ResizedIDPhotos\"
 		    $Name = ($id+".jpg")
  		    
             #Parameters: Image to be altered - Quality of image on a scale of 1/10 - Size of image - Folder to be output to - Name of image
@@ -126,7 +126,7 @@ Function ResizeImage() {
 
 #create new csv file
     $getdate = Get-Date -Format "MM-dd-yyyy-HH-mm"
-    $csvfilename = ("\mapping-"+$getdate+".csv")
+    $csvfilename = ("\mapping.csv")
     $outfile =  ($FolderBrowser.SelectedPath+$csvfilename)
     
     foreach($line in $CsvContent)
@@ -138,8 +138,8 @@ Function ResizeImage() {
         #id holds the id number in the csv 
         $id = $line.Split(",")[1]
             $record = [pscustomobject]@{
-             'File_Name'= $id+".jpg"
-             'External_Id'= $gatewayuser
+             'FileName'= $id+".jpg"
+             'ExternalID'= $gatewayuser
            } 
 
        if(Test-Path -Path ($PhotoPath+"\"+$id+".jpg"))
@@ -149,9 +149,21 @@ Function ResizeImage() {
        }   
 
     }
-        
 
-#writes to a file with error log
+
+    #done file
+    $filename = ("\mapping.xml")
+    "<?xml version='1.0'?>"| Out-File -FilePath ($FolderBrowser.SelectedPath+$filename)
+    "<files>"| Out-File -FilePath ($FolderBrowser.SelectedPath+$filename)-Append
+    '  <file name="mapping.csv" checksum="" checksumhashtype="" />'| Out-File -FilePath ($FolderBrowser.SelectedPath+$filename)-Append
+    "</files>"| Out-File -FilePath ($FolderBrowser.SelectedPath+$filename)-Append
+    $oReturn=[System.Windows.Forms.Messagebox]::Show("Done File Completed")
+
+    #select folder for error log
+    $FolderBrowser = New-Object System.Windows.Forms.FolderBrowserDialog
+    [void]$FolderBrowser.ShowDialog()    
+
+    #writes to a file with error log
     $getdate = Get-Date -Format "MM-dd-yyyy-HH-mm"
     $filename = ("\errorlog-"+$getdate+".txt")
     "The following IDs do not have photos:" | Out-File -FilePath ($FolderBrowser.SelectedPath+$filename)
